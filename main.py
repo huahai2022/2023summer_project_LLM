@@ -1,14 +1,14 @@
 import os.path
-from langchain.document_loaders import UnstructuredFileLoader, TextLoader, CSVLoader
+from langchain.document_loaders import TextLoader, CSVLoader, UnstructuredFileLoader, UnstructuredPDFLoader
 import re
 from typing import List
 from langchain.text_splitter import CharacterTextSplitter
 import PyPDF2
 from langchain.embeddings.huggingface import HuggingFaceInstructEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import VectorStore
-
-import MyFAISS
-
+# import MyFAISS
+# import model
+# from args import parser
 
 SENTENCE_SIZE=20   #最大句子长度是20
 # `SENTENCE_SIZE` 的大小应该根据具体应用场景和需求进行调整。一般而言，句子的长度应该控制在一定范围内，以便于阅读和理解。在中文文本中，句子长度一般在 10 到 30 个字之间比较合适，但是也会有一些较长的句子。
@@ -76,7 +76,7 @@ class ChineseTextSplitter2(CharacterTextSplitter):
             text = re.sub(r"\n{3,}", r"\n", text)
             text = re.sub('\s', " ", text)
             text = re.sub("\n\n", "", text)
-
+        print(text)
         text = re.sub(r'([;；.!?。！？\?])([^”’])', r"\1\n\2", text)  # 单字符断句符
         text = re.sub(r'(\.{6})([^"’”」』])', r"\1\n\2", text)  # 英文省略号
         text = re.sub(r'(\…{2})([^"’”」』])', r"\1\n\2", text)  # 中文省略号
@@ -105,6 +105,28 @@ class ChineseTextSplitter2(CharacterTextSplitter):
                 id = ls.index(ele)
                 ls = ls[:id] + [i for i in ele1_ls if i] + ls[id + 1:]
         return ls
+class ChineseTextSplitter3(CharacterTextSplitter):
+    def __init__(self, pdf: bool = False, sentence_size: int = SENTENCE_SIZE,  **kwargs):
+        super().__init__(**kwargs)
+        self.pdf = pdf
+        self.sentence_size = sentence_size
+
+    def split_text(self, text: str) -> List[str]:   ##此处需要进一步优化逻辑
+        text = re.sub(r"\n{3,}","", text)
+        text = re.sub('\s', "", text)
+        text = re.sub("\n\n", "", text)
+        # 如果双引号前有终止符，那么双引号才是句子的终点，把分句符\n放到双引号后，注意前面的几句都小心保留了双引号
+        text = text.rstrip()  # 段尾如果有多余的\n就去掉它
+        sentences=[]
+        for i in range(100):
+            start_val=str(i+1)
+            end_val=str(i+2)
+            start_index=re.search(start_val,text).start()
+            end_index=re.search(end_val,text).start()
+            substring=text[start_index:end_index]
+            print(substring)
+            sentences.append(substring)
+        return sentences
 
 def find_files(filepath):
     file_paths = []  # 用于存储文件路径的列表
@@ -118,10 +140,15 @@ def find_files(filepath):
             file_paths.append(filepath)
     return file_paths
 
-def show_docx(docxs):
+def show_docx1(docxs):
     for doc in docxs:
         print(doc)
-
+def show_docx2(docxs):
+    docx=""
+    for doc in docxs:
+        docx+=doc
+    docx=docx.replace('\n','')
+    print(docx)
 
 
 def extract_text_from_pdf(filepath):
@@ -156,10 +183,14 @@ def load_file(filepath,sentence_size=SENTENCE_SIZE):
         loader=TextLoader(filepath,autodetect_encoding=True)
         txtSplitter=ChineseTextSplitter2(pdf=False)    #定义中文分割规则
         docs=loader.load_and_split(txtSplitter)        #按照中文分割规则进行划分
-    elif filepath.lower().endswith(".pdf"):            #效果一般
-        docs=extract_text_from_pdf(filepath)
-        pdfSplitter=ChineseTextSplitter2(pdf=True)
-        docs=pdfSplitter.split_text(docs)
+    # elif filepath.lower().endswith(".pdf"):            #效果一般
+    #     docs=extract_text_from_pdf(filepath)
+    #     pdfSplitter=ChineseTextSplitter2(pdf=True)
+    #     docs=pdfSplitter.split_text(docs)
+    elif filepath.lower().endswith(".pdf"):
+        loader=UnstructuredPDFLoader(file_path=filepath)
+        pdfSplitter=ChineseTextSplitter3(pdf=True)
+        docs=loader.load_and_split(pdfSplitter)
     elif filepath.lower().endswith(".csv"):
         loader = CSVLoader(filepath)
         docs = loader.load()
@@ -169,6 +200,18 @@ def load_file(filepath,sentence_size=SENTENCE_SIZE):
         docs = loader.load_and_split(text_splitter=textsplitter)
     return docs
 def main():
+    #初始化模型
+    # llm_model=model.load_model()
+
+
+
+
+
+
+
+
+
+
     loaded_files=[]     #定义知识数据库
     vectors=None
     filepath=input("请输入你的本地文件路径：")
@@ -191,14 +234,17 @@ def main():
             except Exception as e:
                 print(e)
 
-    show_docx(loaded_files)
+    show_docx1(loaded_files)
+    # show_docx2(loaded_files)
     print("文件加载完成，生成知识库中~~~")
-    print(loaded_files.__len__())   #查看生成的文本的数量
-    vectors=VectorStore.from_documents(loaded_files,embedding=HuggingFaceEmbeddings(model_name= "GanymedeNil/text2vec-large-chinese",model_kwargs={'device': "cuda"}))
-    print(dir(vectors))#查看向量库的属性都有哪些
+    # print(loaded_files.__len__())   #查看生成的文本的数量
+    # vectors=VectorStore
+    # vectors=vectors.from_documents(loaded_files,embedding=HuggingFaceEmbeddings(model_name= "GanymedeNil/text2vec-large-chinese",model_kwargs={'device': "cuda"}))
+    # print(vectors)#查看向量库的属性都有哪些
     # ['__bool__', '__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',
     #  '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__',
     #  '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
 
 if __name__ == "__main__":
+    # args=parser.parse_args() #获取参数
     main()
