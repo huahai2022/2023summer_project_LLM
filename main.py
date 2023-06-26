@@ -6,6 +6,10 @@ from langchain.text_splitter import CharacterTextSplitter
 import PyPDF2
 from langchain.embeddings.huggingface import HuggingFaceInstructEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import VectorStore
+
+from args import parser
+from model import load_model,  LoadCheckpoint
+
 # import MyFAISS
 # import model
 # from args import parser
@@ -200,14 +204,6 @@ def load_file(filepath,sentence_size=SENTENCE_SIZE):
         docs = loader.load_and_split(text_splitter=textsplitter)
     return docs
 def main():
-    #初始化模型
-    # llm_model=model.load_model()
-
-
-
-
-
-
 
 
 
@@ -235,16 +231,17 @@ def main():
                 print(e)
 
     show_docx1(loaded_files)
-    # show_docx2(loaded_files)
     print("文件加载完成，生成知识库中~~~")
     # print(loaded_files.__len__())   #查看生成的文本的数量
-    # vectors=VectorStore
-    # vectors=vectors.from_documents(loaded_files,embedding=HuggingFaceEmbeddings(model_name= "GanymedeNil/text2vec-large-chinese",model_kwargs={'device': "cuda"}))
     # print(vectors)#查看向量库的属性都有哪些
     # ['__bool__', '__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__',
     #  '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__',
     #  '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
-
+    model=load_model(loaderCheckpoint=loaderCheckpoint)
 if __name__ == "__main__":
-    # args=parser.parse_args() #获取参数
+    args=None
+    args=parser.parse_args() #获取参数
+    args_dict=vars(args)
+    print(args)
+    loaderCheckpoint=LoadCheckpoint(args_dict)
     main()
