@@ -8,7 +8,8 @@ from langchain.embeddings.huggingface import HuggingFaceInstructEmbeddings,Huggi
 from langchain.vectorstores import VectorStore
 
 from args import parser
-from model import load_model,  LoadCheckpoint
+from model import load_model
+from models.loader import LoadCheckpoint
 
 # import MyFAISS
 # import model
@@ -242,6 +243,6 @@ if __name__ == "__main__":
     args=None
     args=parser.parse_args() #获取参数
     args_dict=vars(args)
-    print(args)
+    print(args_dict)
     loaderCheckpoint=LoadCheckpoint(args_dict)
     main()
