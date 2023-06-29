@@ -1,5 +1,4 @@
 def splitByQuestion(folder_path, file_name_without_suffix):
-    print(folder_path+file_name_without_suffix+".md")
     with open(folder_path+file_name_without_suffix+".md", "r+", encoding="utf-8") as file:
         
         lines = file.readlines()
@@ -15,3 +14,5 @@ def splitByQuestion(folder_path, file_name_without_suffix):
                         count += 1
                         new_file_lines.clear()
             new_file_lines.append(line)
+        with open(folder_path+f"{file_name_without_suffix}_{count}.md", "w", encoding="utf-8") as newfile:
+            newfile.writelines(new_file_lines)
