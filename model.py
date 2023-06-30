@@ -8,7 +8,7 @@ import torch
 import transformers
 from transformers import AutoConfig, AutoModel, AutoModelForCausalLM, LlamaTokenizer, AutoTokenizer
 
-from config import LLM_DEVICE, llm_model_dict, ACCESS_HUGGING_TOKEN
+from config import LLM_DEVICE, llm_model_dict, ACCESS_HUGGING_TOKEN, LLM_HISTORY_LEN
 from models import ChatGLM
 
 
@@ -31,5 +31,6 @@ def load_model(model_name:str=None,use_ptuning_v2:bool=False,loaderCheckpoint:ob
 		# provides_class=LLamaLLM
 		pass
 	modelLLM=provides_class(checkPoint=loaderCheckpoint)
+	modelLLM.history_len=LLM_HISTORY_LEN
 	return modelLLM
 

@@ -1,5 +1,11 @@
+import chardet
+
+
+
+
+
 def removePageNumber(file_path, start_counter):
-    with open(file_path, "r+", encoding="utf-8") as file:
+    with open(file_path, "r+", encoding=f"{result['encoding']}") as file:
         lines = file.readlines()
 
         count = start_counter
@@ -14,3 +20,11 @@ def removePageNumber(file_path, start_counter):
         file.seek(0)
         file.writelines(lines)
         file.truncate()
+
+# 读取文件内容
+with open('D:\learn\project\llm\\Data\\MTDS.pdf', 'rb') as f:
+    content = f.read()
+# 检测文件的编码格式
+result = chardet.detect(content)
+
+removePageNumber("D:\learn\project\llm\\Data\\MTDS.pdf",429)
