@@ -1,132 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
-            <title>智能客服机器人</title>
+        <title>智能客服机器人</title>
             <script src="./js/vue.global.js"></script>
             <link rel="stylesheet" href="css/bootstrap.css" />
-            <link rel="stylesheet" href="font-awesome/css/font-awesome.css" />
             <!--CSS实现-->
             <style>
                 body{
+                    background-color: #f7f7f7;
                     background-image:url();
                     background-size:cover;
                 }
-                p.main{
-                    position: absolute;
-                    top: 2%;
-                    left: 40%;
-                    font-weight: bold;
-                    font-family: "Times New Roman", Times, serif;
-                    font-size: 45px;
-                }
-                .square{
-                    position: absolute;
-                    top: 50%;
-                    left: 34.5%;
+                .square{ 
+                    position: absolute; /*绝对位置*/
+                    top: 46.2%;
+                    left: 34%;
                     transform: translate(-50%, -50%);
-                    border: 3px solid #000000b2;
+                    border: 4px solid #007bff65;
                     border-style:groove;
-                    padding: 10px 5px 10px 10px;
-                    width: 1100px;
-                    height: 910px;
-                    overflow: auto;
-             
+                    border-radius: 9px;
+                    padding: 8px 5px 10px 10px;
+                    width: 1000px;
+                    height: 825px;
+                    overflow: auto; /*实现窗口滚动*/
+                }
+                .square_image {
+                    background-image:url("./picture/paper_d.jpg");
+                    position: absolute;
+                    top: 46.2%;
+                    left: 34%;
+                    transform: translate(-50%, -50%);
+                    width: 1000px;
+                    height: 825px;
+                    opacity: 0.45; /* 设置伪元素的透明度 */
                 }
                 .square p{
-                    padding: 10px 5px 10px 70px;
-                    font-size: 30px;
+                    position: relative;
+                    padding: 10px 10px 2px 70px;
+                    font-size: 35px;
                     overflow: hidden; /* 清除浮动元素造成的高度塌陷问题 */
-                    line-height: 1.2;
-                   
+                    line-height: 1.2; 
+                    font-family: "Times New Roman", Times, serif;
+                    color: #4b4b4bbf;
                 }
-                .message-image {
-                    padding: 10px 5px 0px 0px;
+                .square p::after{
+                    /*生成分隔线*/
+                    content: ""; /*伪元素*/
+                    position: absolute;
+                    left: 0;
+                    bottom: -9px;
+                    width: 100%;
+                    height: 10px;
+                    background-color: rgb(0, 0, 0);
+                    z-index: -1;
+                }
+                .message_image {
+                    padding: 0px 5px 0px 5px;
                     float:right;
-                    width: 50px; /* 调整图片的宽度 */
+                    width: 68px; 
                     margin-right: 10px; /* 调整图片与文本之间的间距 */
-
                 }
                 .inputter{
                     position: absolute;
                     top: 95.5%;
-                    left: 34.5%;
+                    left: 34%;
                     transform: translate(-50%, -50%);
-                    width: 1094px;
-                    height: 70px;
-                    font-size: 30px;
+                    width: 1000px;
+                    height: 60px;
+                    font-size: 35px;
+                    color: #4b4b4bbf;
+                    font-family: "Times New Roman", Times, serif;
                     border-radius: 6px;
-                    padding: 10px;
+                    padding: 12px;
+                    border: 4px solid #007bff7e;
+                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.495);
                 }
                 .submission{
                     position: absolute;
-                    top: 92%;
-                    left: 64%;
-                    width: 68px;
-                    height: 68px;
+                    top: 92.2%;
+                    left: 61.5%;
+                    width: 59px;
+                    height: 59px;
                     background-image: url(./picture/send.png);
                     background-size: cover;
                     background-position: center;
                     background-repeat: no-repeat;
                     border-radius: 8px;
-
                 }
-                .button-set {
+                .button_set {
                     position: absolute;
-                    top: 60%;
-                    left: 85%;
+                    top: 71.2%;
+                    left: 84.5%;
                     transform: translate(-50%, -50%);
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: column; /*flex定义按钮组排版*/
                 }
-                .custom-button {
-                    width: 300px;
+                .custom_button {
+                    width: 350px;
                     height: 45px;
-                    background-color: #41a09d;
-                    color: #ffffff;
-                    border: none;
+                    background-color: #ffffff00;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.539);
+                    color: #007bff7e;
+                    border: solid;
+                    border-radius: 3px;
+                    border-color: #007bff7e;
                     padding: 10px 20px;
                     font-size: 16px;
                     margin:5px;
+                    transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */
+                    cursor: pointer;
+                }
+                .custom_button:hover{
+                     /*悬停改变按钮样式*/
+                    color: #ffffff;
+                    border-color: #ffffff00;
+                    background-color:#007bff7e;
+                }
+                .vertical_line {
+                    position: absolute;
+                    top: 50%;
+                    left: 68.5%;
+                    transform: translate(-50%, -50%);
+                    width: 1.3px;
+                    height: 98%;
+                    border-color: #007bff7e;
+                    border-style: groove;
                 }
                 .container{
                     position: absolute;
-                    top: 60%;
-                    left: 85%;
+                    top: 71.5%;
+                    left: 84.4%;
                     transform: translate(-50%, -50%);
-                    border: 4px solid #000000b2;
+                    border: 3px solid #007bff7e;
+                    border-radius: 9px;
                     border-style:groove;
-                    width: 350px;
-                    height: 390px;
+                    width: 410px;
+                    height: 380px;
                 }
                 .container p{
-                    margin-bottom: 137px;
-                    word-spacing: 65px;
+                    margin-bottom: 132px;
+                    word-spacing: 100px;
                     white-space: pre;
                     font-weight: bold;
                     font-family: "Times New Roman", Times, serif;
-                    font-size: 30px;
+                    font-size: 32px;
                     padding: 5px 0px 0px 3px;
-                    color: #6e0459;
+                    color: #4b4b4bbf;
                 }
                 .changer{
                     position: absolute;
-                    top: 92%;
-                    left: 88%;
+                    top: 92.6%;
+                    left: 88.6%;
                     transform: translate(-50%, -50%);
                     background-image: url(./picture/change.png);
                     background-size: cover;
                     background-position: center;
                     background-repeat: no-repeat;
-                    width: 35px;
-                    height: 35px;
+                    width: 38px;
+                    height: 38px;
                 }
-                .message{
-                    margin-bottom: 10px;
-                    line-height: 1.2; 
+                .markdown{
+                    position: absolute;
+                    top:23.5%;
+                    left:84.4%;
+                    transform: translate(-50%, -50%);
+                    border: 3px solid #007bff7e;
+                    border-radius: 9px;
+                    border-style:groove;
+                    width: 410px;
+                    height: 413px;
+                    overflow: auto; 
                 }
-                .test{
-                    width: 100px;
-                    height: 50px;
+                .markdown p{
+                    font-weight: bold;
+                    font-family: "Times New Roman", Times, serif;
+                    font-size: 20px;
+                    padding: 4px 0px 0px 4px;
+                    color: #4b4b4bbf;
+                }
+                .expander{
+                    width: 100x;
+                    height: 32px;
+                    background-color: #ffffff00;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.539);
+                    color: #007bff7e;
+                    border: solid;
+                    border-radius: 2px;
+                    border-color: #007bff7e;
+                    font-size: 16px;
+                    transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */
+                    cursor: pointer;
+                }
+                .expander:hover{
+                    color: #ffffff;
+                    border-color: #ffffff00;
+                    background-color:#007bff7e;
+                }
+                .hr{
+                    border:1px groove #007bff7e;
                 }
             </style>
     </head>
@@ -134,15 +205,40 @@
     <body>
         <div id="app">
 
-            <!--回答显示文本框-->
-            <div class="square">
-                <div class="message" v-for="message in messages" :key="message.id">
-                    <img class="message-image" :src="message.imageUrl" alt=Image">
-                    <p v-html="addLineBreaks(message.text)"></p>
+            <!--背景-->
+            <div class="square_image" alt="Background Image"></div>
+            <!--装饰性竖线-->
+            <div class="vertical_line"></div>
+            
+            <!--Markdown显示框-->
+            <div class="markdown">
+                <p>.md参考</p>   
+                <hr class="hr">
+                <!-- 文本和图片对应展示 -->
+                <div v-for="(item,index) in mdContent" :key="item.id">
+                    <!-- 添加按钮 -->
+                    <button class="expander" @click="toggleExpand(item)">{{item.filename}}</button> 
+                    <div class="mdText" v-show="item.expanded">
+                        <p v-html="addLineBreaks(item.text)"></p>
+                    </div>
+                    <div v-for="image in item.image" :key="image" v-show="item.expanded">
+                        <img :src="basePath + image" alt="">
+                    </div>
+                    <!-- 在每个按钮组之后生成分隔线 -->
+                    <hr class="hr" v-if="(index + 1) % mdFileCount == 0">
                 </div>
             </div>
 
-            <!--换一批框架-->
+            <!--回答显示文本框-->
+            <div class="square">
+                <!--问答信息-->
+                <div class="message" v-for="message in messages" :key="message.id">
+                    <img class="message_image" :src="message.imageUrl" alt=Image">
+                    <p v-html="addLineBreaks(message.text)"></p>
+                </div>
+            </div>
+            
+            <!--“换一批”框架-->
             <div class="container">
                 <p>猜你想问:</p>
                 <p></p>
@@ -150,13 +246,13 @@
                 <button class="changer" @click="getChangeCircle()"></button>
             </div>
 
-            <!--多选按钮栏-->
-            <div class="button-set">
-                <button class="custom-button" v-for="button in buttons" 
+            <!--“换一批”按钮组-->
+            <div class="button_set">
+                <button class="custom_button" v-for="button in buttons" 
                 v-bind:key="button.id" @click="fill(button.buttonText)">{{ button.label }}</button>
             </div>
 
-            <!--输入事件监听-->
+            <!--键入框监听-->
             <form action="./receive.py" method="post">
                     <input class="inputter" v-model="inputText" type="text" placeholder="有什么可以帮助您的呢？">
                     <button class="submission" v-on:click="submit"></button>
@@ -168,13 +264,25 @@
         const mydata={
             data() {  
                 return{
+
+                    //////////////////////////////
+                    basePath: 'file:///C:/Users/LENOVO/Desktop/Project/',//这里需要修改
+                    //////////////////////////////
+
+                    mdFileCount:0,
                     inputText:'',
-                    responseText: '',
+                    responseText:'',
+                    //markdownText:[],
+                    //markdownImages:[],
+                    markdownContents:[],
                     messages: [],
+                    mdTexts:[],
+                    mdImage:[],
+                    mdContent:[],
                     buttonsStore:
                     [
                         //在每组label和buttonText中输入一致的文本
-                        { id: 1, label: '我测试长度我测试长度我测试长度我', buttonText: '16字' },
+                        { id: 1, label: '我测试长度我测试长度我测试长度我度我度', buttonText: '19字' },
                         { id: 2, label: '按钮2', buttonText: '文本2' },
                         { id: 3, label: '按钮3', buttonText: '文本3' },
                         { id: 4, label: '按钮2', buttonText: '文本2' },
@@ -202,7 +310,6 @@
             mounted() {
                     this.interceptingData();
                     try {
-                    // 执行初始化操作或其他任务
                     } catch (error) {
                     // 处理错误
                     console.error('Error during mounted hook:', error);
@@ -210,12 +317,18 @@
             },
 
             methods:{
+
+                //切换md文件的展开和收起状态
+                toggleExpand(item) {
+                    item.expanded = !item.expanded;
+                    },
+
                 //添加空行
                 addLineBreaks(text) {
                     return text.replace(/\n/g, '<br>');
                     },
                 
-                // “换一批”函数
+                // “换一批”总函数
                 getChangeCircle() {
                     if (this.buttonsStore.length > 5 && this.buttonsStore.length > this.num){
                         this.sourceListlen();   //点击的时候获取分为几组
@@ -225,7 +338,8 @@
                         }
                     },
 
-                // 计算数据的长度，共分为几组，如果不能整除则加1
+                // “换一批”分组函数
+                //计算数据的长度，共分为几组，如果不能整除则加1
                 sourceListlen() {
                     var len = this.buttonsStore.length; //获取源数据的长度
                     this.group = len / this.num;
@@ -234,7 +348,8 @@
                     }
                     },
                     
-                //计算将点击次数和开始截取的参数清空, 如果点击此时大于当前数据的组数，则重新开始计数。
+                //“换一批”重新计数函数
+                //计算将点击次数和开始截取的参数清空, 如果点击此时大于当前数据的组数，则重新开始计数
                 clear() {
                     if (this.clickNum > this.group - 1) {
                         this.timeStart = 0;
@@ -242,29 +357,30 @@
                         this.clickNum = 0;
                     }
                     },
-                   
+                
+                //“换一批”计数更新函数
                 //每点击一次，记录次数
                 autoIncre() {
                     this.clickNum++;
                     this.timeStart++;
                     this.timeEnd++;
                     },
-                    
-                //截取当前每组的数据
+                
+                //“换一批”数据装载函数
+                //截取元数据内当前每组的数据，放入新数组内
                 interceptingData() {
-                    //截取源数据放入新数组内
                     this.buttons = this.buttonsStore.slice(
                         this.num * this.timeStart,
                         this.num * this.timeEnd
                         );
                     },
 
-                //快捷输入             
+                //“换一批”快捷输入             
                 fill(buttonText){
                     this.inputText=buttonText;
                     },
                 
-                //提交
+                //提交问题
                 submit(){
                     // 阻止表单的默认提交行为
                     event.preventDefault();     
@@ -280,20 +396,75 @@
                         } 
                     },
 
-                //发送&接受数据
+                //显示回答文本
+                displayResponseText(){
+                    if (this.responseText !== '') {
+                        this.messages.push({
+                            id: Date.now(),
+                            text: this.responseText,
+                            imageUrl:'./picture/robot.png',
+                            });
+                        } 
+                    },
+/*
+                //显示.md文本
+                displayMarkdownText(){
+                    if (this.markdownText !== '') {
+                        this.mdTexts.push({
+                            id: Date.now(),
+                            text: this.markdownText,
+                            });
+                        } 
+                    },
+
+                //显示.md图片
+                displayMarkdownImages(){
+                    if (this.markdownImages.length > 0) {
+                        for (const image of this.markdownImages) {
+                            this.mdImage.push({
+                                id: Date.now(),
+                                text: this. basePath + image,
+                                });
+                            }
+                        } 
+                    },
+*/
+
+                // 显示.md文本和图片
+                displayMarkdownContents() {
+                if (this.markdownContents.length > 0) {
+                    this.markdownContents.forEach(content => {
+                        const newItem = {
+                            id: Date.now(),
+                            filename:content.file_name,
+                            text: content.markdown_text,
+                            image: content.markdown_images,
+                            expanded: false // 添加 expanded 属性，默认为 false
+                            };
+                        this.mdContent.push(newItem);
+                        this.mdFileCount=this.markdownContents.length;
+                        });
+                    }
+                },
+
+                //发送、接收数据
                 sendMessage() {
+                    //路由发送，定义方法、头部、数据
                     fetch('http://localhost:5000/receive.py', {
                         method: 'POST',
                         body: JSON.stringify({ text: this.inputText }),
                         headers: {
                         'Content-Type': 'application/json'
                         },
-                        mode: 'cors'
+                        mode: 'cors',
                     })
                     .then(response => response.json())
                     .then(data => {
+                        //数据回传后调用一系列方法处理数据
                         this.responseText = data.text;
+                        this.markdownContents = data.markdown_contents;
                         this.displayResponseText();
+                        this.displayMarkdownContents();
                     })
                     .catch(error => {
                         console.error('请求发送失败:', error);
@@ -303,42 +474,10 @@
                     this.clearInputter();
                     },
 
-                //显示回答文本
-                displayResponseText(){
-                    if (this.responseText !== '') {
-                        this.messages.push({
-                            id: Date.now(),
-                            text: this.responseText,
-                            imageUrl:'./picture/robot.png'
-                            });
-                        } 
-                    },
-
                 //清空inputText
                 clearInputter(){
                     this.inputText = '';
-                },
-
-
-                    // this.newText=this.messages[this.messages.length - 1].text;
-                    // this.output(); 
-                    // 调用 output() 方法并传递最新的消息文本
-                /*output() {
-                    let index = 0;
-                    const timer = setInterval(() => {
-                        if (index < this.newText.length) {
-                            // 逐个追加字符
-                            this.outputText += this.newText[index];
-                            index++;
-                            } 
-                        else {
-                            // 输出完成，清除定时器
-                            clearInterval(timer);
-                            }
-                        this.outputtedText += this.outputText;
-                        }, 100); // 每个字符的输出间隔时间（毫秒）
-                    }*/
-
+                    },
                 }
             }
         Vue.createApp(mydata).mount("#app")
