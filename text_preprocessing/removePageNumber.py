@@ -22,9 +22,9 @@ def removePageNumber(file_path, start_counter):
         file.truncate()
 
 # 读取文件内容
-with open('D:\learn\project\llm\\Data\\MTDS.pdf', 'rb') as f:
+with open('D:\learn\\bing\Chapter15_1\\Chatper15_1.md', 'rb') as f:
     content = f.read()
 # 检测文件的编码格式
 result = chardet.detect(content)
 
-removePageNumber("D:\learn\project\llm\\Data\\MTDS.pdf",429)
+removePageNumber("D:\learn\\bing\Chapter15_1\\Chatper15_1.md",449)

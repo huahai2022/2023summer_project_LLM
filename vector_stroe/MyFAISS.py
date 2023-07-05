@@ -58,7 +58,7 @@ class MyFAISS(FAISS,VectorStore):
 	def similarity_search_with_score_by_vector(
 			self,
 			embedding:List[float],
-			k:int = 4,
+			k:int = VECTOR_SEARCH_TOP_K,
 			filter:Optional[Dict[str, Any]] = None,
 			fetch_k:int=20,
 			**kwargs: Any,
@@ -71,6 +71,7 @@ class MyFAISS(FAISS,VectorStore):
 		if self._normalize_L2:
 			faiss.normalize_L2(vector)
 		scores, indices = self.index.search(vector, k)
+		print(scores)
 		#cores 表示每个查询向量的相似度得分（即余弦相似度），indices 表示与每个查询向量最相似的 k 个向量的索引号。
 		docs=[]
 		id_set=set()
@@ -86,6 +87,7 @@ class MyFAISS(FAISS,VectorStore):
 			else:
 				continue
 			doc=self.docstore.search(_id)
+			print(doc)
 			if (not self.chunk_conent) or ("context_expand" in doc.metadata and not  doc.metadata["context_expand"]):
 				#不需要进行上下文的扩展
 				if not isinstance(doc,Document):

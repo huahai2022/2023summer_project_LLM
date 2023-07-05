@@ -16,3 +16,4 @@ def splitByQuestion(folder_path, file_name_without_suffix):
             new_file_lines.append(line)
         with open(folder_path+f"{file_name_without_suffix}_{count}.md", "w", encoding="utf-8") as newfile:
             newfile.writelines(new_file_lines)
+splitByQuestion("D:\learn\\bing\Chapter16\\","Chapter16")

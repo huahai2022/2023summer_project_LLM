@@ -1,4 +1,5 @@
 import gc
+import time
 from abc import ABC
 import torch
 from langchain.llms.base import LLM
@@ -7,7 +8,7 @@ from typing import Optional ,List
 from models.loader import LoadCheckpoint
 from models.base import (BaseAnswer,AnswerResult)
 class ChatGLM(BaseAnswer,LLM,ABC):
-	max_token:int=10000
+	max_token:int=2048
 	temperature:float=0.01
 	top_p=0.9
 	checkPoint:LoadCheckpoint=None
@@ -59,6 +60,7 @@ class ChatGLM(BaseAnswer,LLM,ABC):
 				answer_result.history=history
 				#历史记录全部存起来了
 				answer_result.llm_output={"answer":stream_resp}
+				yield answer_result
 				#yield answer_result是用于返回聊天模型的输出结果，以便在调用方中逐步获取答案
 		else:
 			response,_ =self.checkPoint.model.chat(

@@ -1,15 +1,30 @@
+import logging
 import os
-
+KNOWLEDGE_BASE_INFO=(
+	"你已经进入知识库模式,可以使用我们目前已经现有的知识库，也可以新建知识库"
+)
+WEB_TITLE="""
+#🎉🤟🎈这里是基于langchain实现的智能客服机器人，我的默认模型是ChatGLM-6B
+"""
 LOAD_IN_8BIT = False
 LLM_DEVICE = "cuda"
 LLM_MODEL = "chatglm-6b"
-LLM_HISTORY_LEN=10
-VECTOR_SEARCH_TOP_K=5
-CHUNK_SIZE=250   #匹配单段上下文的长度
+LLM_HISTORY_LEN=1
+VECTOR_SEARCH_TOP_K=2
+CHUNK_SIZE=200   #匹配单段上下文的长度
 VECTOR_SEARCH_SCORE_THRESHOLD=0  #数据库的匹配相似度，为0不生效，这个值不确定
 SENTENCE_SIZE=20
-STREAME=True
+STREAME=False
 ROOT_PATH=os.path.join(os.path.dirname(os.path.dirname(__file__)), "knowledge_base")
+REPLY_WITH_SOURCE_SOCRE=True
+REPLY_WITH_SCORE=False
+LOG_FORMAT = "%(levelname) -5s %(asctime)s" "-1d: %(message)s"
+logger=logging.getLogger()
+logger.setLevel(logging.INFO)
+logging.basicConfig(format=LOG_FORMAT)
+PROMPT_TEMPLATE="""已知信息：{context}
+根据上述已知信息，简洁且专业地回答用户地问题。如果问题不清晰或无法从已知信息中得到答案，请回复"根据已知信息无法回答该问题，请提供足够的本地知识库信息"，切勿在答案中胡编乱造，切勿回答已知信息以外的问题，问题不明确的时，请回答问题不明确，答案请使用中文。问题是：{question}"""
+# PROMPT_TEMPLATE="""已知问题：{question}请先判断该问题是不是问题，如果不是，请说”请明确你的问题“。如果是，根据以下已知信息，简洁且专业地回复用户信息，如果无法从已知信息中得到答案，请回复请提供足够的知识，切勿在答案中胡编乱造，切勿在答案中回复与已知信息无关的内容，已知信息是{context}"""
 ACCESS_HUGGING_TOKEN="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"
 llm_model_dict = {
 	"chatglm-6b-int4-qe": {

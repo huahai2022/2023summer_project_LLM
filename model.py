@@ -9,7 +9,7 @@ import transformers
 from transformers import AutoConfig, AutoModel, AutoModelForCausalLM, LlamaTokenizer, AutoTokenizer
 
 from config import LLM_DEVICE, llm_model_dict, ACCESS_HUGGING_TOKEN, LLM_HISTORY_LEN
-from models import ChatGLM
+from models import ChatGLM, MOSS
 
 
 def load_model(model_name:str=None,use_ptuning_v2:bool=False,loaderCheckpoint:object=None)->Any:
@@ -25,8 +25,7 @@ def load_model(model_name:str=None,use_ptuning_v2:bool=False,loaderCheckpoint:ob
 	if loaderCheckpoint.model_name.lower().startswith("thudm"):
 		provides_class=ChatGLM
 	elif loaderCheckpoint.model_name.lower().startswith("fnlp"):
-		# provides_class=MOSSLLM
-		pass
+		provides_class=MOSS
 	else:
 		# provides_class=LLamaLLM
 		pass

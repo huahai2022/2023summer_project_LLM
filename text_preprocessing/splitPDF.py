@@ -2,9 +2,9 @@
 #实现对PDF的按照页分割
 import PyPDF2
 
-input_file = "D:\learn\project\llm\\text_preprocessing\\13_16.pdf"
-output_file = "16.pdf"
-start_page = 429
+input_file = "D:\learn\project\llm\\china.pdf"
+output_file = "chinese.pdf"
+start_page = 8
 
 # 打开PDF文件
 with open(input_file, "rb") as f:

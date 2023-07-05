@@ -200,7 +200,6 @@ class LoadCheckpoint:
 
 
 		# loading the tokenizer
-
 		if type(model) is transformers.LlamaForCausalLM:
 			tokenizer=LlamaTokenizer.from_pretrained(checkpoint,clean_up_tokenization_spaces=True)
 			try:
