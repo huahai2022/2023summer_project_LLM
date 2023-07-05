@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <head>
+            <title>智能客服机器人</title>
+            <script src="./js/vue.global.js"></script>
+            <link rel="stylesheet" href="css/bootstrap.css" />
+            <link rel="stylesheet" href="font-awesome/css/font-awesome.css" />
+            <!--CSS实现-->
+            <style>
+                body{
+                    background-image:url();
+                    background-size:cover;
+                }
+                p.main{
+                    position: absolute;
+                    top: 2%;
+                    left: 40%;
+                    font-weight: bold;
+                    font-family: "Times New Roman", Times, serif;
+                    font-size: 45px;
+                }
+                .square{
+                    position: absolute;
+                    top: 50%;
+                    left: 34.5%;
+                    transform: translate(-50%, -50%);
+                    border: 3px solid #000000b2;
+                    border-style:groove;
+                    padding: 10px 5px 10px 10px;
+                    width: 1100px;
+                    height: 910px;
+                    overflow: auto;
+             
+                }
+                .square p{
+                    padding: 10px 5px 10px 70px;
+                    font-size: 30px;
+                    overflow: hidden; /* 清除浮动元素造成的高度塌陷问题 */
+                    line-height: 1.2;
+                   
+                }
+                .message-image {
+                    padding: 10px 5px 0px 0px;
+                    float:right;
+                    width: 50px; /* 调整图片的宽度 */
+                    margin-right: 10px; /* 调整图片与文本之间的间距 */
+
+                }
+                .inputter{
+                    position: absolute;
+                    top: 95.5%;
+                    left: 34.5%;
+                    transform: translate(-50%, -50%);
+                    width: 1094px;
+                    height: 70px;
+                    font-size: 30px;
+                    border-radius: 6px;
+                    padding: 10px;
+                }
+                .submission{
+                    position: absolute;
+                    top: 92%;
+                    left: 64%;
+                    width: 68px;
+                    height: 68px;
+                    background-image: url(./picture/send.png);
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    border-radius: 8px;
+
+                }
+                .button-set {
+                    position: absolute;
+                    top: 60%;
+                    left: 85%;
+                    transform: translate(-50%, -50%);
+                    display: flex;
+                    flex-direction: column;
+                }
+                .custom-button {
+                    width: 300px;
+                    height: 45px;
+                    background-color: #41a09d;
+                    color: #ffffff;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    margin:5px;
+                }
+                .container{
+                    position: absolute;
+                    top: 60%;
+                    left: 85%;
+                    transform: translate(-50%, -50%);
+                    border: 4px solid #000000b2;
+                    border-style:groove;
+                    width: 350px;
+                    height: 390px;
+                }
+                .container p{
+                    margin-bottom: 137px;
+                    word-spacing: 65px;
+                    white-space: pre;
+                    font-weight: bold;
+                    font-family: "Times New Roman", Times, serif;
+                    font-size: 30px;
+                    padding: 5px 0px 0px 3px;
+                    color: #6e0459;
+                }
+                .changer{
+                    position: absolute;
+                    top: 92%;
+                    left: 88%;
+                    transform: translate(-50%, -50%);
+                    background-image: url(./picture/change.png);
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    width: 35px;
+                    height: 35px;
+                }
+                .message{
+                    margin-bottom: 10px;
+                    line-height: 1.2; 
+                }
+                .test{
+                    width: 100px;
+                    height: 50px;
+                }
+            </style>
+    </head>
+
+    <body>
+        <div id="app">
+
+            <!--回答显示文本框-->
+            <div class="square">
+                <div class="message" v-for="message in messages" :key="message.id">
+                    <img class="message-image" :src="message.imageUrl" alt=Image">
+                    <p v-html="addLineBreaks(message.text)"></p>
+                </div>
+            </div>
+
+            <!--换一批框架-->
+            <div class="container">
+                <p>猜你想问:</p>
+                <p></p>
+                <p>&nbsp;&nbsp;换一批</p>
+                <button class="changer" @click="getChangeCircle()"></button>
+            </div>
+
+            <!--多选按钮栏-->
+            <div class="button-set">
+                <button class="custom-button" v-for="button in buttons" 
+                v-bind:key="button.id" @click="fill(button.buttonText)">{{ button.label }}</button>
+            </div>
+
+            <!--输入事件监听-->
+            <form action="./receive.py" method="post">
+                    <input class="inputter" v-model="inputText" type="text" placeholder="有什么可以帮助您的呢？">
+                    <button class="submission" v-on:click="submit"></button>
+            </form>
+        </div>
+    </body>
+
+    <script>
+        const mydata={
+            data() {  
+                return{
+                    inputText:'',
+                    responseText: '',
+                    messages: [],
+                    buttonsStore:
+                    [
+                        //在每组label和buttonText中输入一致的文本
+                        { id: 1, label: '我测试长度我测试长度我测试长度我', buttonText: '16字' },
+                        { id: 2, label: '按钮2', buttonText: '文本2' },
+                        { id: 3, label: '按钮3', buttonText: '文本3' },
+                        { id: 4, label: '按钮2', buttonText: '文本2' },
+                        { id: 5, label: '按钮2', buttonText: '文本2' },
+                        { id: 6, label: '我测试长度', buttonText: '16f字' },
+                        { id: 7, label: '按钮2gd', buttonText: '文本f2' },
+                        { id: 8, label: '按钮3s', buttonText: '文本3g' },
+                        { id: 9, label: '按钮f2', buttonText: '文本2a' },
+                        { id: 10, label: '按钮2k', buttonText: '文本s2' },
+                        { id: 11, label: '按钮3', buttonText: '文本3' },
+                        { id: 12, label: '按钮2', buttonText: '文本2' },
+                        { id: 13, label: '按钮2', buttonText: '文本2' },
+                        { id: 14, label: '我测试长度', buttonText: '16f字' },
+                        { id: 15, label: '按钮2gd', buttonText: '文本f2' },
+                    ],
+                    buttons:[],     //处理后的新数据，用于输出
+                    timeStart: 0,   //截取第几组的起始参数
+                    timeEnd: 1,     //截取第几组的结束参数
+                    group: 0,       //默认为0组
+                    num: 5,         //每页展示列表的数量
+                    clickNum: 0,    //点击的次数
+                }
+            },
+
+            mounted() {
+                    this.interceptingData();
+                    try {
+                    // 执行初始化操作或其他任务
+                    } catch (error) {
+                    // 处理错误
+                    console.error('Error during mounted hook:', error);
+                }
+            },
+
+            methods:{
+                //添加空行
+                addLineBreaks(text) {
+                    return text.replace(/\n/g, '<br>');
+                    },
+                
+                // “换一批”函数
+                getChangeCircle() {
+                    if (this.buttonsStore.length > 5 && this.buttonsStore.length > this.num){
+                        this.sourceListlen();   //点击的时候获取分为几组
+                        this.autoIncre();       //每点击一次记录点击次数
+                        this.clear();
+                        this.interceptingData();
+                        }
+                    },
+
+                // 计算数据的长度，共分为几组，如果不能整除则加1
+                sourceListlen() {
+                    var len = this.buttonsStore.length; //获取源数据的长度
+                    this.group = len / this.num;
+                    if (len % this.num != 0) {
+                        this.group = parseInt(this.group) + 1;
+                    }
+                    },
+                    
+                //计算将点击次数和开始截取的参数清空, 如果点击此时大于当前数据的组数，则重新开始计数。
+                clear() {
+                    if (this.clickNum > this.group - 1) {
+                        this.timeStart = 0;
+                        this.timeEnd = 1;
+                        this.clickNum = 0;
+                    }
+                    },
+                   
+                //每点击一次，记录次数
+                autoIncre() {
+                    this.clickNum++;
+                    this.timeStart++;
+                    this.timeEnd++;
+                    },
+                    
+                //截取当前每组的数据
+                interceptingData() {
+                    //截取源数据放入新数组内
+                    this.buttons = this.buttonsStore.slice(
+                        this.num * this.timeStart,
+                        this.num * this.timeEnd
+                        );
+                    },
+
+                //快捷输入             
+                fill(buttonText){
+                    this.inputText=buttonText;
+                    },
+                
+                //提交
+                submit(){
+                    // 阻止表单的默认提交行为
+                    event.preventDefault();     
+                    if (this.inputText !== '') {
+                        this.messages.push({
+                            id: Date.now(),
+                            text: this.inputText,
+                            imageUrl:'./picture/cat.png'
+                            });
+                    //调用发送函数
+                    //置于if语句内避免空发送
+                    this.sendMessage();
+                        } 
+                    },
+
+                //发送&接受数据
+                sendMessage() {
+                    fetch('http://localhost:5000/receive.py', {
+                        method: 'POST',
+                        body: JSON.stringify({ text: this.inputText }),
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        mode: 'cors'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.responseText = data.text;
+                        this.displayResponseText();
+                    })
+                    .catch(error => {
+                        console.error('请求发送失败:', error);
+                    });
+                    //一切处理完毕后再清空inputText
+                    //避免异步处理过程中数据无法读取
+                    this.clearInputter();
+                    },
+
+                //显示回答文本
+                displayResponseText(){
+                    if (this.responseText !== '') {
+                        this.messages.push({
+                            id: Date.now(),
+                            text: this.responseText,
+                            imageUrl:'./picture/robot.png'
+                            });
+                        } 
+                    },
+
+                //清空inputText
+                clearInputter(){
+                    this.inputText = '';
+                },
+
+
+                    // this.newText=this.messages[this.messages.length - 1].text;
+                    // this.output(); 
+                    // 调用 output() 方法并传递最新的消息文本
+                /*output() {
+                    let index = 0;
+                    const timer = setInterval(() => {
+                        if (index < this.newText.length) {
+                            // 逐个追加字符
+                            this.outputText += this.newText[index];
+                            index++;
+                            } 
+                        else {
+                            // 输出完成，清除定时器
+                            clearInterval(timer);
+                            }
+                        this.outputtedText += this.outputText;
+                        }, 100); // 每个字符的输出间隔时间（毫秒）
+                    }*/
+
+                }
+            }
+        Vue.createApp(mydata).mount("#app")
+    </script>
+</html>
