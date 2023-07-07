@@ -78,7 +78,7 @@ class MyFAISS(FAISS,VectorStore):
 		store_len=len(self.index_to_docstore_id)
 		rearrange_id_list=False
 		for j,i in enumerate(indices[0]):
-			if i==-1 or 0<self.score_threshold<scores[0][j]:
+			if i==-1 or 0<scores[0][j]<self.score_threshold:
 				#TODO:向量编号 i 取值范围为 [0, num_vectors - 1]，其中 num_vectors 表示向量索引中的向量总数。当搜索结果中的向量编号 i 为 -1 时，表示索引未能找到与查询向量相似的向量。
 				continue
 
@@ -87,7 +87,6 @@ class MyFAISS(FAISS,VectorStore):
 			else:
 				continue
 			doc=self.docstore.search(_id)
-			print(doc)
 			if (not self.chunk_conent) or ("context_expand" in doc.metadata and not  doc.metadata["context_expand"]):
 				#不需要进行上下文的扩展
 				if not isinstance(doc,Document):

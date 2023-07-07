@@ -15,10 +15,10 @@ from models import ChatGLM, MOSS
 def load_model(model_name:str=None,use_ptuning_v2:bool=False,loaderCheckpoint:object=None)->Any:
 	pre_model_name=loaderCheckpoint.model_name
 	llm_model_config=llm_model_dict[pre_model_name]
-	if use_ptuning_v2:
-		loaderCheckpoint.use_ptuning_v2=use_ptuning_v2
-	if model_name:
-		llm_model_config=llm_model_dict[model_name]
+	# if use_ptuning_v2:
+	# 	loaderCheckpoint.use_ptuning_v2=use_ptuning_v2
+	# if model_name:
+	# 	llm_model_config=llm_model_dict[model_name]
 	loaderCheckpoint.model_name=llm_model_config["pretrained_model_name"]
 	loaderCheckpoint.model_path=llm_model_config["local_model_path"]
 	loaderCheckpoint.reload_model()

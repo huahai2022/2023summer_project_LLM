@@ -47,7 +47,7 @@ def main():
         try:
             option=int(option)
         except ValueError:
-            print("你麻痹认真点")
+            print("认真点！！！")
             continue
         if (option==1):
             #TODO:使用本地知识库
@@ -77,7 +77,7 @@ def main():
                 try :
                     next_option=int(next_option)
                 except ValueError:
-                    print("你麻痹认真点")
+                    print("请你认真点")
                     continue
                 if next_option==1:
                     filepath=input("请输入你的本地知识文件路径")

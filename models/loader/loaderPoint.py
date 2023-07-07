@@ -52,40 +52,40 @@ class LoadCheckpoint:
 		self.unload_model()
 		print(self.model_name)
 		self.model_config=self.load_model_config(self.model_name)
-		if self.use_ptuning_v2:
-			try:
-				prefix_encoder_file=open(Path(f'{self.ptuning_dir}/config.json'),'r')
-				prefix_encoder_config=json.loads(prefix_encoder_file.read())
-				prefix_encoder_file.close()
-				self.model_config.pre_sea_len=prefix_encoder_config['pre_seq_len']
-				self.model_config.prefix_projection = prefix_encoder_config['prefix_projection']
-
-				# PTuning
-				# 技术的原理是基于半监督学习和自适应训练的思想，通过最大化有标注数据和无标注数据之间的相似度来训练模型，从而提高模型的泛化能力和性能。具体来说，PTuning
-				# 技术包括以下两个关键步骤：1.生成前缀序列和前缀投影矩阵在PTuning
-				# 技术中，为了适应特定任务的需求，需要生成一个前缀序列和一个前缀投影矩阵，用于微调模型。前缀序列是一个固定长度的序列，可以用于指导模型学习任务相关的特征。前缀投影矩阵是一个
-				# 权重矩阵，可以用于将输入向量投影到前缀序列的空间中，从而提高模型在语义匹配和相似度计算任务上的性能。
-				# 2.半监督微调在PTuning
-				# 技术中，使用少量的有标注数据和大量的无标注数据对模型进行微调，以适应特定任务的需求。在微调过程中，使用前缀序列和前缀投影矩阵来指导模型学习任务相关的特征。具体来说，PTuning
-				# 技术使用了一个新的损失函数，称为Pairwise Ranking Loss，用于最大化有标注数据和无标注数据之间的相似度。Pairwise
-				# Ranking Loss 可以用于比较两个输入的相似性，从而提高模型在语义匹配和相似度计算任务上的性能。在微调过程中，模型使用有标注数据计算
-				# Pairwise Ranking Loss，使用无标注数据计算自监督损失，从而提高模型的泛化能力和性能。总之，PTuning
-				# 技术通过使用前缀序列和前缀投影矩阵，以及半监督微调的方式，可以提高模型在语义匹配和相似度计算任务上的性能，并且可以适应不同的任务需求。
-			except :
-				print(Exception)
-				print("加载prefixEncoder失败")
+		# if self.use_ptuning_v2:
+		# 	try:
+		# 		prefix_encoder_file=open(Path(f'{self.ptuning_dir}/config.json'),'r')
+		# 		prefix_encoder_config=json.loads(prefix_encoder_file.read())
+		# 		prefix_encoder_file.close()
+		# 		self.model_config.pre_sea_len=prefix_encoder_config['pre_seq_len']
+		# 		self.model_config.prefix_projection = prefix_encoder_config['prefix_projection']
+		#
+		# 		# PTuning
+		# 		# 技术的原理是基于半监督学习和自适应训练的思想，通过最大化有标注数据和无标注数据之间的相似度来训练模型，从而提高模型的泛化能力和性能。具体来说，PTuning
+		# 		# 技术包括以下两个关键步骤：1.生成前缀序列和前缀投影矩阵在PTuning
+		# 		# 技术中，为了适应特定任务的需求，需要生成一个前缀序列和一个前缀投影矩阵，用于微调模型。前缀序列是一个固定长度的序列，可以用于指导模型学习任务相关的特征。前缀投影矩阵是一个
+		# 		# 权重矩阵，可以用于将输入向量投影到前缀序列的空间中，从而提高模型在语义匹配和相似度计算任务上的性能。
+		# 		# 2.半监督微调在PTuning
+		# 		# 技术中，使用少量的有标注数据和大量的无标注数据对模型进行微调，以适应特定任务的需求。在微调过程中，使用前缀序列和前缀投影矩阵来指导模型学习任务相关的特征。具体来说，PTuning
+		# 		# 技术使用了一个新的损失函数，称为Pairwise Ranking Loss，用于最大化有标注数据和无标注数据之间的相似度。Pairwise
+		# 		# Ranking Loss 可以用于比较两个输入的相似性，从而提高模型在语义匹配和相似度计算任务上的性能。在微调过程中，模型使用有标注数据计算
+		# 		# Pairwise Ranking Loss，使用无标注数据计算自监督损失，从而提高模型的泛化能力和性能。总之，PTuning
+		# 		# 技术通过使用前缀序列和前缀投影矩阵，以及半监督微调的方式，可以提高模型在语义匹配和相似度计算任务上的性能，并且可以适应不同的任务需求。
+		# 	except :
+		# 		print(Exception)
+		# 		print("加载prefixEncoder失败")
 		self.model,self.tokenizer=self.load_model(self.model_name)
-		if self.use_ptuning_v2:
-			try:
-				prefix_state_dict=torch.load(Path(f'{self.ptuning_dir}/pytorch_model.bin'))
-				new_prefix_state_dict={}
-				for k,v  in prefix_state_dict.items():
-					if k.startswith("transformer.prefix_encoder."):
-						new_prefix_state_dict[k[len("transformer.prefix_encoder."):]]=v
-				self.model.transformer.prefix_encoder.load_state_dict(new_prefix_state_dict)
-				self.model.transformer.prefix_encoder.float()
-			except Exception as e:
-				print(e)
+		# if self.use_ptuning_v2:
+		# 	try:
+		# 		prefix_state_dict=torch.load(Path(f'{self.ptuning_dir}/pytorch_model.bin'))
+		# 		new_prefix_state_dict={}
+		# 		for k,v  in prefix_state_dict.items():
+		# 			if k.startswith("transformer.prefix_encoder."):
+		# 				new_prefix_state_dict[k[len("transformer.prefix_encoder."):]]=v
+		# 		self.model.transformer.prefix_encoder.load_state_dict(new_prefix_state_dict)
+		# 		self.model.transformer.prefix_encoder.float()
+		# 	except Exception as e:
+		# 		print(e)
 		self.model=self.model.eval()
 	def load_model_config(self,model_name):
 		if self.model_path:
@@ -139,7 +139,7 @@ class LoadCheckpoint:
 			loaderClass=AutoModel
 		else:
 			loaderClass=AutoModelForCausalLM   #因果语言模型
-		#多卡部署
+		# 多卡部署
 		if self.load_in_8bit:
 			from accelerate import init_empty_weights
 			from accelerate.utils import get_balanced_memory,infer_auto_device_map
@@ -171,9 +171,7 @@ class LoadCheckpoint:
 					else:
 						self.device_map = self.chatglm_config_device_map(num_gpus)
 					model = dispatch_model(model, device_map=self.device_map)
-			pass
 		else:
-			# 多卡部署
 			if torch.cuda.is_available() and self.llm_device.lower().startswith("cuda"):
 				num_gpus=torch.cuda.device_count()
 				if num_gpus==1:
@@ -200,16 +198,16 @@ class LoadCheckpoint:
 
 
 		# loading the tokenizer
-		if type(model) is transformers.LlamaForCausalLM:
-			tokenizer=LlamaTokenizer.from_pretrained(checkpoint,clean_up_tokenization_spaces=True)
-			try:
-				tokenizer.eos_token_id = 2
-				tokenizer.bos_token_id = 1
-				tokenizer.pad_token_id = 0
-			except Exception as e:
-				print(e)
-		else:
-			tokenizer=AutoTokenizer.from_pretrained(checkpoint,trust_remote_code=True)
+		# if type(model) is transformers.LlamaForCausalLM:
+		# 	tokenizer=LlamaTokenizer.from_pretrained(checkpoint,clean_up_tokenization_spaces=True)
+		# 	try:
+		# 		tokenizer.eos_token_id = 2
+		# 		tokenizer.bos_token_id = 1
+		# 		tokenizer.pad_token_id = 0
+		# 	except Exception as e:
+		# 		print(e)
+		# else:
+		tokenizer=AutoTokenizer.from_pretrained(checkpoint,trust_remote_code=True)
 		return model,tokenizer
 
 	def chatglm_config_device_map(self,num_gpus:int)->Dict[str,int]:
