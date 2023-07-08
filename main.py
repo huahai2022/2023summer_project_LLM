@@ -1,21 +1,10 @@
 import os.path
-# from langchain.document_loaders import TextLoader, CSVLoader, UnstructuredFileLoader, UnstructuredPDFLoader
-# import re
-# from typing import List
-# from langchain.text_splitter import CharacterTextSplitter
-# import PyPDF2
-# from langchain.embeddings.huggingface import HuggingFaceInstructEmbeddings,HuggingFaceEmbeddings
-# from langchain.vectorstores import VectorStore
-
 from DB import MyLocalDB
 from args import parser
 from config import SENTENCE_SIZE, STREAME, REPLY_WITH_SOURCE_SOCRE
 from model import load_model
 from models.loader import LoadCheckpoint
 
-# import MyFAISS
-# import model
-# from args import parser
 sentence_size=SENTENCE_SIZE
  #最大句子长度是20
 # `SENTENCE_SIZE` 的大小应该根据具体应用场景和需求进行调整。一般而言，句子的长度应该控制在一定范围内，以便于阅读和理解。在中文文本中，句子长度一般在 10 到 30 个字之间比较合适，但是也会有一些较长的句子。
