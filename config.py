@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> d6a0a1ee7de3b0c4d4b120b6fee0b01b6b7ebc69
 import logging
 import os
 KNOWLEDGE_BASE_INFO=(
@@ -51,8 +48,6 @@ llm_model_dict = {
 	},
 
 }
-<<<<<<< HEAD
-
 
 # 在以下字典中修改属性值，以指定本地embedding模型存储位置
 # 如将 "text2vec": "GanymedeNil/text2vec-large-chinese" 修改为 "text2vec": "User/Downloads/text2vec-large-chinese"
@@ -61,5 +56,4 @@ embedding_model_dict = {
     "text2vec-base": "shibing624/text2vec-base-chinese",
     "text2vec": "GanymedeNil/text2vec-large-chinese",
 }
-=======
->>>>>>> d6a0a1ee7de3b0c4d4b120b6fee0b01b6b7ebc69
+
